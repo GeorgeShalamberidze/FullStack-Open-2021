@@ -69,10 +69,3 @@ const App = () => {
 }
 
 export default App
-
-// <Statistics text="good: " score={good} />
-// <Statistics text="neutral: " score={neutral} />
-// <Statistics text="bad: " score={bad} />
-// <Statistics text="all: " score={total} />
-// <Statistics text="average: " score={(good * 1) + (bad * -1) + (neutral * 0)} />
-// <Statistics text="positive: " score={total === 0 ? 0 : (good / total) * 100} />
