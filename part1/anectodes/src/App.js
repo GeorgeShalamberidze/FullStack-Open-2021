@@ -27,11 +27,8 @@ const App = () => {
     setCounter(counter + 1)
     random()
   }
-
   const indexOfMaxVoted = copy.indexOf(Math.max(...copy))
-  console.log('selected is ...', selected)
-  console.log([...vote])
-  console.log(indexOfMaxVoted)
+
   if (counter === 0) {
     return (
       <>
@@ -44,7 +41,7 @@ const App = () => {
     return (
       <div>
         <h1>Anectode of the day: </h1>
-        
+
         <h3><em>{anecdotes[selected]}</em></h3>
         <p>has <strong>{copy[selected]}</strong> votes</p>
 
