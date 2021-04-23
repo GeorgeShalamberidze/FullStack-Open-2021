@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
 
-function App() {
+const App = () => {
+  const [persons, setPersons] = useState([
+    { name: 'Arto Hellas', id: 0 }
+  ])
+  const [newName, setNewName] = useState('')
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setNewName("")
+    if (persons.some(p => p.name === newName)) {
+      alert(`${newName} Already Exists`)
+    }
+    else {
+      setPersons(persons.concat({ name: newName, id: persons[persons.length - 1].id + 1 }))
+    }
+  }
+
+  const handleChange = (e) => {
+    setNewName(e.target.value)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h2>Phonebook</h2>
+      <form onSubmit={(e) => e.preventDefault()}>
+        <div>
+          name: <input value={newName} onChange={handleChange} />
+        </div>
+        <div>
+          <button type="submit" onClick={handleSubmit}>add</button>
+        </div>
+      </form>
+      <h2>Numbers</h2>
+      {persons.map(person => {
+        return (
+          <p key={person.id}>{person.name}</p>
+        )
+      })}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
