@@ -1,17 +1,25 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from "./components/PersonForm"
 import Contacts from './components/Contacts'
 import FilteredContacts from "./components/FilteredContacts"
+import Tester from "./components/Tester"
+import axios from 'axios'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', id: 0, number: 555555555 },
-  ])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
   let filteredContacts = search == '' ? [] : persons.filter(p => p.name.toLowerCase().includes(search.toLowerCase()))
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/persons")
+      .then(res => {
+        setPersons(res.data)
+      })
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -33,7 +41,6 @@ const App = () => {
   const handleSearch = (e) => setSearch(e.target.value)
 
   return (
-
     <div>
       <h2>Phonebook</h2>
       <Filter
@@ -48,8 +55,8 @@ const App = () => {
         numberChange={handleNumberChange}
         handleSubmit={handleSubmit}
       />
-      <Contacts persons={persons}/>
-      <FilteredContacts filteredContacts={filteredContacts}/>
+      <Contacts persons={persons} />
+      <FilteredContacts filteredContacts={filteredContacts} />
     </div>
   )
 }
