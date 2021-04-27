@@ -3,7 +3,6 @@ import Filter from './components/Filter'
 import PersonForm from "./components/PersonForm"
 import Contacts from './components/Contacts'
 import FilteredContacts from "./components/FilteredContacts"
-import Tester from "./components/Tester"
 import axios from 'axios'
 
 const App = () => {
