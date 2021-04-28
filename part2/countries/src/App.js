@@ -14,17 +14,12 @@ function App() {
       })
   }, [])
 
+
   const handleSearchInput = (e) => setSearchInput(e.target.value)
   const filteredSearch = countries.filter(country => country.name.toLowerCase().includes(searchInput.toLowerCase()))
-
-  const handleShow = (e, idx) => {
-    if (e.target.value == idx) {
-      console.log('got it')
-    }
-    console.log(e.target.value)
-    setShowButton(!showButton)
-  }
   
+  console.log(filteredSearch)
+
   return (
     <div>
       <form>
@@ -57,7 +52,7 @@ function App() {
             return (
               <div key={country.numericCode}>
                 <p style={{display: "inline-block", margin: "5px"}}>{country.name}</p>
-                <button onClick={(e) => handleShow(e, country.numericCode)} value={country.numericCode}>Show</button>
+                <button onClick={() => setSearchInput(country.name)} value={country.numericCode}>Show</button>
                 {}
               </div>
             )
