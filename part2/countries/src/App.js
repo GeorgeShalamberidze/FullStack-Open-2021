@@ -1,10 +1,35 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import SingleCountry from "./components/SingleCountry"
+import MultipleCountries from "./components/MultipleCountries"
 
 function App() {
   const [countries, setCountries] = useState([])
   const [searchInput, setSearchInput] = useState('')
-  const [showButton, setShowButton] = useState(false)
+  const [weather, setWeather] = useState([])
+  const [randomCity, setRandomCity] = useState("Tbilisi")
+  const api_key = process.env.REACT_APP_API_KEY
+
+  const params = {
+      access_key: api_key,
+      query: randomCity,
+      units: 'm'
+  }
+
+  const test = (a) => {
+    setRandomCity(a)
+  }
+
+  useEffect(() => {
+    axios
+        .get("http://api.weatherstack.com/current", { params })
+        .then(res => {
+            const data = res.data
+            if (data) {
+                setWeather(data)
+            }
+        })
+}, [])
 
   useEffect(() => {
     axios
@@ -14,11 +39,11 @@ function App() {
       })
   }, [])
 
+  const handleSearchInput = (e) => {
+    setSearchInput(e.target.value)
+  }
 
-  const handleSearchInput = (e) => setSearchInput(e.target.value)
   const filteredSearch = countries.filter(country => country.name.toLowerCase().includes(searchInput.toLowerCase()))
-  
-  console.log(filteredSearch)
 
   return (
     <div>
@@ -30,33 +55,14 @@ function App() {
       {filteredSearch.length > 10
         ? "Too Many Matches, specify country name"
         : filteredSearch.length == 1
-          ? filteredSearch.map((country, id) => {
-            return (
-              <div key={country.numericCode}>
-                <h1>{country.name}</h1>
-                <p>Currency: <strong>{country.currencies[0].name}</strong></p>
-                <p>Capital: <strong>{country.capital}</strong></p>
-                <p>Population: <strong>{country.population}</strong></p>
-                <h3>Languages: </h3>
-                {country.languages.map((lang, id) => {
-                  return (
-                    <li key={id}>{lang.name}</li>
-                  )
-                })}
-                <br />
-                <img src={country.flag} alt="flag" style={{ width: "250px", height: "150px" }} />
-              </div>
-            )
-          })
-          : filteredSearch.map(country => {
-            return (
-              <div key={country.numericCode}>
-                <p style={{display: "inline-block", margin: "5px"}}>{country.name}</p>
-                <button onClick={() => setSearchInput(country.name)} value={country.numericCode}>Show</button>
-                {}
-              </div>
-            )
-          })}
+          ? <SingleCountry
+            filteredSearch={filteredSearch}
+            test={test}
+          />
+          : <MultipleCountries
+            filteredSearch={filteredSearch}
+            setSearchInput={setSearchInput}
+          />}
     </div>
   )
 }
