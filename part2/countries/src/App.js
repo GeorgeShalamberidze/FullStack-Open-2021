@@ -6,30 +6,7 @@ import MultipleCountries from "./components/MultipleCountries"
 function App() {
   const [countries, setCountries] = useState([])
   const [searchInput, setSearchInput] = useState('')
-  const [weather, setWeather] = useState([])
   const [randomCity, setRandomCity] = useState("Tbilisi")
-  const api_key = process.env.REACT_APP_API_KEY
-
-  const params = {
-      access_key: api_key,
-      query: randomCity,
-      units: 'm'
-  }
-
-  const test = (a) => {
-    setRandomCity(a)
-  }
-
-  useEffect(() => {
-    axios
-        .get("http://api.weatherstack.com/current", { params })
-        .then(res => {
-            const data = res.data
-            if (data) {
-                setWeather(data)
-            }
-        })
-}, [])
 
   useEffect(() => {
     axios
@@ -57,7 +34,6 @@ function App() {
         : filteredSearch.length == 1
           ? <SingleCountry
             filteredSearch={filteredSearch}
-            test={test}
           />
           : <MultipleCountries
             filteredSearch={filteredSearch}

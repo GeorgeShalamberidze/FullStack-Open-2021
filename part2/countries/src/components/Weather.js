@@ -1,7 +1,25 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 function Weather({ filteredSearch }) {
-    console.log(filteredSearch)
+    const [weather, setWeather] = useState([])
+    const api_key = process.env.REACT_APP_API_KEY
+    const params = {
+        access_key: api_key,
+        query: filteredSearch.filter(f => f.name),
+        units: 'm'
+    }
+
+    useEffect(() => {
+        axios
+            .get("http://api.weatherstack.com/current", { params })
+            .then(res => {
+                const data = res.data
+                setWeather(data)
+            })
+    }, [])
+    console.log(weather)
+
     return (
         <div>
             {filteredSearch.map(country => {
