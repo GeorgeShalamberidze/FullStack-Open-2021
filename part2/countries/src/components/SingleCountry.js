@@ -22,7 +22,7 @@ function SingleCountry({ filteredSearch }) {
                     </div>
                 )
             })}
-            <Weather />
+            <Weather filteredSearch={filteredSearch}/>
         </div>
     )
 }
