@@ -6,7 +6,7 @@ function Weather({ filteredSearch }) {
     const api_key = process.env.REACT_APP_API_KEY
     const params = {
         access_key: api_key,
-        query: filteredSearch.filter(f => f.name),
+        query: filteredSearch[0].capital,
         units: 'm'
     }
 
@@ -14,24 +14,20 @@ function Weather({ filteredSearch }) {
         axios
             .get("http://api.weatherstack.com/current", { params })
             .then(res => {
-                const data = res.data
-                setWeather(data)
+                setWeather(res.data)
             })
     }, [])
-    console.log(weather)
 
-    return (
+    return weather.location ? (
         <div>
-            {filteredSearch.map(country => {
-                return (
-                    <div key={country.numericCode}>
-                        <h2>Weather in {country.name}</h2>
-                        <p>temperature: <strong> Celsius</strong></p>
-                        <img src='' alt={`weather`} />
-                        <p>wind: <strong> Mph</strong>, Direction: <strong></strong></p>
-                    </div>
-                )
-            })}
+            <h2>Weather in {weather['location'].name}, {weather['location'].country}</h2>
+            <p>Temperature: <strong>{weather.current.temperature} Celsius</strong></p>
+            <img src={weather.current.weather_icons[0]} alt='weather'/>
+            <p>Wind: <strong>{weather.current.wind_speed} Mph, Direction: {weather.current.wind_dir}</strong></p>
+        </div>
+    ) : (
+        <div>
+            <h1>Searching...</h1>
         </div>
     )
 }

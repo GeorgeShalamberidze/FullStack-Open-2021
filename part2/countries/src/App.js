@@ -6,7 +6,6 @@ import MultipleCountries from "./components/MultipleCountries"
 function App() {
   const [countries, setCountries] = useState([])
   const [searchInput, setSearchInput] = useState('')
-  const [randomCity, setRandomCity] = useState("Tbilisi")
 
   useEffect(() => {
     axios
@@ -32,9 +31,11 @@ function App() {
       {filteredSearch.length > 10
         ? "Too Many Matches, specify country name"
         : filteredSearch.length == 1
-          ? <SingleCountry
-            filteredSearch={filteredSearch}
-          />
+          ? <div>
+            <SingleCountry
+              filteredSearch={filteredSearch}
+            />
+          </div>
           : <MultipleCountries
             filteredSearch={filteredSearch}
             setSearchInput={setSearchInput}
