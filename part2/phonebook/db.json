@@ -1,19 +1,3 @@
 {
-  "persons": [
-    {
-      "name": "dsdsa",
-      "number": "5",
-      "id": 8
-    },
-    {
-      "name": "a",
-      "number": "123",
-      "id": 9
-    },
-    {
-      "name": "asd",
-      "number": "123",
-      "id": 10
-    }
-  ]
+  "persons": []
 }

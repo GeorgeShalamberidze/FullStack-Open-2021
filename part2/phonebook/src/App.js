@@ -12,6 +12,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
   const [notification, setNotification] = useState(null)
+  const [handleError, setHandleError] = useState(null)
 
   let filteredContacts = search == '' ? [] : persons.filter(p => p.name.toLowerCase().includes(search.toLowerCase()))
 
@@ -42,7 +43,7 @@ const App = () => {
     e.preventDefault()
 
     if (persons.some(p => p.name === newName)) {
-      if (window.confirm(`${duplicate.name} already exists. Want to replace old number with current one ?`)){
+      if (window.confirm(`${duplicate.name} already exists. Want to replace old number with current one ?`)) {
         changeNumber(duplicate.id)
         setNotification(`${duplicate.name}'s number has been changed`)
         setTimeout(() => {
@@ -88,7 +89,11 @@ const App = () => {
           setNewNumber('')
         })
         .catch(err => {
-          console.log(err)
+          setHandleError(`Contact: ${clickedOne.name} has already been deleted`)
+          setTimeout(() => {
+            setHandleError(null)
+          }, 4000)
+          setPersons(persons.filter(p => p.id !== id))
         })
     }
   }
@@ -100,7 +105,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notification}/>
+      <Notification
+        message={notification}
+        error={handleError}
+      />
       <Filter
         search={search}
         handleSearch={handleSearch}

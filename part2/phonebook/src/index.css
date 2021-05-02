@@ -12,3 +12,14 @@ h1{
     font-weight: bold;
     margin: 10px 0;
 }
+
+.error {
+    color: white;
+    height: 35px;
+    padding: 10px 5px;
+    border-radius: 10px;
+    background-color: red;
+    font-size: 25px;
+    font-weight: bold;
+    margin: 10px 0;
+}
