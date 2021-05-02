@@ -7,8 +7,11 @@ function Contacts({ persons, deleteGod }) {
             {persons.map(person => {
                 return (
                     <div key={person.id}>
-                        <p style={{display: "inline-block"}}>{person.name} {person.number}</p>
-                        <button type="button" onClick={() => deleteGod(person.id)}> delete</button>
+                        <p style={{ display: "inline-block" }}>{person.name} {person.number}</p>
+                        <button type="button" onClick={(e) => {
+                            e.preventDefault()
+                            deleteGod(person.id)
+                        }}> delete</button>
                     </div>
                 )
             })}

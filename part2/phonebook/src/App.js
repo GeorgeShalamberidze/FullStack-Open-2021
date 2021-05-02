@@ -19,7 +19,7 @@ const App = () => {
         setPersons(res)
       })
   }, [])
-  
+
   const handleSubmit = (e) => {
     e.preventDefault()
     if (persons.some(p => p.name === newName)) {
@@ -36,23 +36,19 @@ const App = () => {
       service
         .create(noteObj)
         .then(res => {
-          console.log(res)
+          setPersons(persons.concat(res))
+          setNewName('')
+          setNewNumber('')
         })
         .catch(err => {
           console.log(err)
         })
-      setPersons(persons.concat({
-        name: newName, 
-        number: newNumber
-      }))
     }
-    setNewName('')
-    setNewNumber('')
   }
 
   const deleteGod = (id) => {
-    const peop = persons.find(p => p.id !== id)
-    if (peop) {
+    const clickedOne = persons.find(p => p.id === id)
+    if (window.confirm(`Delete ${clickedOne.name} ?`)){
       service
         .deleteUser(id)
         .then(res => {
@@ -63,6 +59,8 @@ const App = () => {
         })
     }
     setPersons(persons.filter(p => p.id !== id))
+    setNewName('')
+    setNewNumber('')
   }
 
   const handleChange = (e) => setNewName(e.target.value)
