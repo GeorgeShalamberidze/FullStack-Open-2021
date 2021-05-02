@@ -4,13 +4,15 @@ import PersonForm from "./components/PersonForm"
 import Contacts from './components/Contacts'
 import FilteredContacts from "./components/FilteredContacts"
 import service from './services/module'
-import axios from 'axios'
+import Notification from "./components/Notification"
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
+  const [notification, setNotification] = useState(null)
+
   let filteredContacts = search == '' ? [] : persons.filter(p => p.name.toLowerCase().includes(search.toLowerCase()))
 
   const changeNumber = (id) => {
@@ -42,6 +44,10 @@ const App = () => {
     if (persons.some(p => p.name === newName)) {
       if (window.confirm(`${duplicate.name} already exists. Want to replace old number with current one ?`)){
         changeNumber(duplicate.id)
+        setNotification(`${duplicate.name}'s number has been changed`)
+        setTimeout(() => {
+          setNotification(null)
+        }, 4000)
         setNewName('')
         setNewNumber('')
       }
@@ -60,6 +66,10 @@ const App = () => {
           setPersons(persons.concat(res))
           setNewName('')
           setNewNumber('')
+          setNotification(`${res.name} has been added`)
+          setTimeout(() => {
+            setNotification(null)
+          }, 4000)
         })
         .catch(err => {
           console.log(err)
@@ -90,6 +100,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification}/>
       <Filter
         search={search}
         handleSearch={handleSearch}
