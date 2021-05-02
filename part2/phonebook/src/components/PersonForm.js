@@ -2,7 +2,7 @@ import React from 'react'
 
 function PersonForm({newName, handleChange, newNumber, numberChange, handleSubmit}) {
     return (
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form onSubmit={handleSubmit}>
             <div>
                 name: <input value={newName} onChange={handleChange} placeholder="enter name..." />
             </div>
@@ -11,7 +11,7 @@ function PersonForm({newName, handleChange, newNumber, numberChange, handleSubmi
             </div>
 
             <div>
-                <button type="submit" onClick={handleSubmit}>add</button>
+                <button type="submit">add</button>
             </div>
         </form>
     )

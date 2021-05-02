@@ -3,7 +3,7 @@ import Filter from './components/Filter'
 import PersonForm from "./components/PersonForm"
 import Contacts from './components/Contacts'
 import FilteredContacts from "./components/FilteredContacts"
-import axios from 'axios'
+import service from './services/module'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -13,10 +13,10 @@ const App = () => {
   let filteredContacts = search == '' ? [] : persons.filter(p => p.name.toLowerCase().includes(search.toLowerCase()))
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
+    service
+      .getAll()
       .then(res => {
-        setPersons(res.data)
+        setPersons(res)
       })
   }, [])
 
@@ -28,10 +28,22 @@ const App = () => {
     else if (!newNumber === "" && persons.some(p => p.number === newNumber)) {
       alert(`${newNumber} Already Exists`)
     }
-    else if (!newNumber == "" || !newName == "") {
+    else if (!newNumber == "" && !newName == "") {
+      const noteObj = {
+        name: newName,
+        number: newNumber
+      }
+      service
+        .create(noteObj)
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
       setPersons(persons.concat({ name: newName, id: persons[persons.length - 1].id + 1, number: newNumber }))
     }
-    setNewName("")
+    setNewName('')
     setNewNumber('')
   }
 
