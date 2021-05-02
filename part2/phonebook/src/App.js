@@ -4,6 +4,7 @@ import PersonForm from "./components/PersonForm"
 import Contacts from './components/Contacts'
 import FilteredContacts from "./components/FilteredContacts"
 import service from './services/module'
+import axios from 'axios'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -11,6 +12,20 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
   let filteredContacts = search == '' ? [] : persons.filter(p => p.name.toLowerCase().includes(search.toLowerCase()))
+
+  const changeNumber = (id) => {
+    const duplicateContact = persons.find(p => p.id === id)
+    const newContact = { ...duplicateContact, number: newNumber }
+
+    service
+      .update(id, newContact)
+      .then(res => {
+        setPersons(persons.map(p => p.id !== id ? p : res))
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
 
   useEffect(() => {
     service
@@ -21,11 +36,17 @@ const App = () => {
   }, [])
 
   const handleSubmit = (e) => {
+    const duplicate = persons.find(p => p.name === newName)
     e.preventDefault()
+
     if (persons.some(p => p.name === newName)) {
-      alert(`${newName} Already Exists`)
+      if (window.confirm(`${duplicate.name} already exists. Want to replace old number with current one ?`)){
+        changeNumber(duplicate.id)
+        setNewName('')
+        setNewNumber('')
+      }
     }
-    else if (!newNumber === "" && persons.some(p => p.number === newNumber)) {
+    else if (!newNumber === "" && persons.some(p => p.number === newNumber) && persons.some(p => p.name === newName)) {
       alert(`${newNumber} Already Exists`)
     }
     else if (!newNumber == "" && !newName == "") {
@@ -48,19 +69,18 @@ const App = () => {
 
   const deleteGod = (id) => {
     const clickedOne = persons.find(p => p.id === id)
-    if (window.confirm(`Delete ${clickedOne.name} ?`)){
+    if (window.confirm(`Delete ${clickedOne.name} ?`)) {
       service
         .deleteUser(id)
         .then(res => {
-          console.log(res)
+          setPersons(persons.filter(p => p.id !== id))
+          setNewName('')
+          setNewNumber('')
         })
         .catch(err => {
           console.log(err)
         })
     }
-    setPersons(persons.filter(p => p.id !== id))
-    setNewName('')
-    setNewNumber('')
   }
 
   const handleChange = (e) => setNewName(e.target.value)
