@@ -1,12 +1,15 @@
 import React from 'react'
 
-function Contacts({ persons }) {
+function Contacts({ persons, deleteGod }) {
     return (
         <div>
             <h2>Contacts: </h2>
             {persons.map(person => {
                 return (
-                    <p key={person.id}>{person.name} {person.number}</p>
+                    <div key={person.id}>
+                        <p style={{display: "inline-block"}}>{person.name} {person.number}</p>
+                        <button type="button" onClick={() => deleteGod(person.id)}> delete</button>
+                    </div>
                 )
             })}
         </div>

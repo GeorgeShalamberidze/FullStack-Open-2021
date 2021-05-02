@@ -19,7 +19,7 @@ const App = () => {
         setPersons(res)
       })
   }, [])
-
+  
   const handleSubmit = (e) => {
     e.preventDefault()
     if (persons.some(p => p.name === newName)) {
@@ -41,10 +41,28 @@ const App = () => {
         .catch(err => {
           console.log(err)
         })
-      setPersons(persons.concat({ name: newName, id: persons[persons.length - 1].id + 1, number: newNumber }))
+      setPersons(persons.concat({
+        name: newName, 
+        number: newNumber
+      }))
     }
     setNewName('')
     setNewNumber('')
+  }
+
+  const deleteGod = (id) => {
+    const peop = persons.find(p => p.id !== id)
+    if (peop) {
+      service
+        .deleteUser(id)
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+    setPersons(persons.filter(p => p.id !== id))
   }
 
   const handleChange = (e) => setNewName(e.target.value)
@@ -66,7 +84,10 @@ const App = () => {
         numberChange={handleNumberChange}
         handleSubmit={handleSubmit}
       />
-      <Contacts persons={persons} />
+      <Contacts
+        persons={persons}
+        deleteGod={deleteGod}
+      />
       <FilteredContacts filteredContacts={filteredContacts} />
     </div>
   )
