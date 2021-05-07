@@ -1,8 +1,17 @@
 const express = require('express')
 const app = express()
+const morgan = require("morgan")
+const morganBody = require('morgan-body')
+const bodyParser = require('body-parser')
+
 app.use(express.json())
 
-const persons = [
+morgan.token("post", (req, res) => {
+  return JSON.stringify(req.body)
+})
+app.use(morgan(":method :url :status :res[content-length] - :response-time ms / :post"))
+
+var persons = [
   {
     id: 1,
     name: "Arto Hellas",
@@ -42,7 +51,6 @@ app.get('/info', (req, res) => {
 app.get("/api/persons/:id", (req, res) => {
   const id = parseInt(req.params.id)
   const person = persons.find(n => n.id === id)
-  console.log(id)
   if (person) {
     res.send(person)
   }
@@ -55,14 +63,43 @@ app.delete('/api/persons:/id', (req, res) => {
   const id = parseInt(req.params.id)
   persons = persons.filter(p => p.id !== id)
 
-  console.log("id: ", id)
-
   res.status(404).end()
 })
 
 app.get("/", (req, res) => {
   res.send("<h1>Hello World</h1>")
 })
+
+app.post("/api/persons", (req, res) => {
+  const randomId = Math.floor(Math.random() * 100000)
+  const reqBody = req.body
+  const newPerson = {
+    id: randomId,
+    name: reqBody.name,
+    number: reqBody.number
+  }
+
+  if (!reqBody.name || !reqBody.number){
+    return res.status(400).json({
+      error: "Name and/or number is missing"
+    })
+  }
+  
+  if (persons.some(p => p.name === reqBody.name)){
+    return res.status(400).json({
+      error: "That name already exists in phonebook"
+    })
+  } 
+
+  persons = persons.concat(newPerson)
+  res.json(reqBody)
+})
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
 
 
 const PORT = 3000
