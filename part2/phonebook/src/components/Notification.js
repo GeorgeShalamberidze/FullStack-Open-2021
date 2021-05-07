@@ -1,9 +1,6 @@
 import React from 'react'
 
 function Notification({ message, error }) {
-    console.log("message: ", message)
-    console.log("error: ", error)
-
     if (message == null && error == null) {
         return null
     }
