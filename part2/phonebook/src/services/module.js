@@ -1,5 +1,5 @@
 import axios from 'axios'
-const URL = "http://localhost:3000/api/persons"
+const URL = "/api/persons"
 
 const create = (obj) => {
     const request = axios.post(URL, obj)

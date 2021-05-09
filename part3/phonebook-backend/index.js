@@ -7,6 +7,7 @@ const cors = require("cors")
 
 app.use(express.json())
 app.use(cors())
+app.use(express.static('build'))
 
 morgan.token("post", (req, res) => {
   return JSON.stringify(req.body)
@@ -61,7 +62,7 @@ app.get("/api/persons/:id", (req, res) => {
   }
 })
 
-app.delete("/api/persons:/id", (req, res) => {
+app.delete("/api/persons/:id", (req, res) => {
   const id = parseInt(req.params.id)
   console.log("id", id)
   persons = persons.filter(p => p.id !== id)
@@ -96,7 +97,7 @@ app.post("/api/persons", (req, res) => {
 
   persons = persons.concat(newPerson)
   res.json(reqBody)
-  console.log(persons)
+  console.log(reqBody)
 })
 
 const unknownEndpoint = (request, response) => {
@@ -105,8 +106,7 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint)
 
-
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
