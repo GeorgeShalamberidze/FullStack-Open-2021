@@ -87,6 +87,7 @@ const App = () => {
           setPersons(persons.filter(p => p.id !== id))
           setNewName('')
           setNewNumber('')
+          console.log(res)
         })
         .catch(err => {
           setHandleError(`Contact: ${clickedOne.name} has already been deleted`)

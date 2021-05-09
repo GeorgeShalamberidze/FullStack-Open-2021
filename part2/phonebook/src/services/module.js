@@ -1,5 +1,5 @@
 import axios from 'axios'
-const URL = "http://localhost:3001/persons"
+const URL = "http://localhost:3000/api/persons"
 
 const create = (obj) => {
     const request = axios.post(URL, obj)
@@ -17,6 +17,7 @@ const update = (id, obj) => {
 }
 
 const deleteUser = (id) => {
+    console.log(id, URL)
     const request = axios.delete(`${URL}/${id}`)
     return request.then(res => res.data)
 }

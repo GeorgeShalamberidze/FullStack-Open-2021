@@ -3,15 +3,17 @@ const app = express()
 const morgan = require("morgan")
 const morganBody = require('morgan-body')
 const bodyParser = require('body-parser')
+const cors = require("cors")
 
 app.use(express.json())
+app.use(cors())
 
 morgan.token("post", (req, res) => {
   return JSON.stringify(req.body)
 })
 app.use(morgan(":method :url :status :res[content-length] - :response-time ms / :post"))
 
-var persons = [
+let persons = [
   {
     id: 1,
     name: "Arto Hellas",
@@ -60,10 +62,11 @@ app.get("/api/persons/:id", (req, res) => {
 })
 
 app.delete('/api/persons:/id', (req, res) => {
-  const id = parseInt(req.params.id)
+  const id = Number(req.params.id)
+  console.log("id", id)
   persons = persons.filter(p => p.id !== id)
 
-  res.status(404).end()
+  res.status(204).end()
 })
 
 app.get("/", (req, res) => {
@@ -93,13 +96,14 @@ app.post("/api/persons", (req, res) => {
 
   persons = persons.concat(newPerson)
   res.json(reqBody)
+  console.log(persons)
 })
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
 
-app.use(unknownEndpoint)
+// app.use(unknownEndpoint)
 
 
 const PORT = 3000

@@ -1,6 +1,7 @@
 import React from 'react'
 
 function Contacts({ persons, deleteGod }) {
+    // const per
     return (
         <div>
             <h2>Contacts: </h2>
