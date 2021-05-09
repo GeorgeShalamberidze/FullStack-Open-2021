@@ -17,7 +17,6 @@ const update = (id, obj) => {
 }
 
 const deleteUser = (id) => {
-    console.log(id, URL)
     const request = axios.delete(`${URL}/${id}`)
     return request.then(res => res.data)
 }

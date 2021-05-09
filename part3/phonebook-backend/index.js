@@ -61,8 +61,8 @@ app.get("/api/persons/:id", (req, res) => {
   }
 })
 
-app.delete('/api/persons:/id', (req, res) => {
-  const id = Number(req.params.id)
+app.delete("/api/persons:/id", (req, res) => {
+  const id = parseInt(req.params.id)
   console.log("id", id)
   persons = persons.filter(p => p.id !== id)
 
@@ -103,10 +103,10 @@ const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
 
-// app.use(unknownEndpoint)
+app.use(unknownEndpoint)
 
 
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
