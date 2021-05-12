@@ -64,7 +64,6 @@ app.get("/api/persons/:id", (req, res) => {
 
 app.delete("/api/persons/:id", (req, res) => {
   const id = parseInt(req.params.id)
-  console.log("id", id)
   persons = persons.filter(p => p.id !== id)
 
   res.status(204).end()
