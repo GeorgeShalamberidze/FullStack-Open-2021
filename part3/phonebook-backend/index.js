@@ -4,6 +4,8 @@ const morgan = require("morgan")
 const morganBody = require('morgan-body')
 const bodyParser = require('body-parser')
 const cors = require("cors")
+require('dotenv').config()
+const Person = require("./models/person")
 
 app.use(express.json())
 app.use(cors())
@@ -14,52 +16,35 @@ morgan.token("post", (req, res) => {
 })
 app.use(morgan(":method :url :status :res[content-length] - :response-time ms / :post"))
 
-let persons = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "11111"
-  },
-  {
-    id: 2,
-    name: "George Hellas",
-    number: "22222"
-  },
-  {
-    id: 3,
-    name: "John Hellas",
-    number: "33333"
-  },
-  {
-    id: 4,
-    name: "Wallace Hellas",
-    number: "44444"
-  },
-]
-
 app.get("/api/persons", (req, res) => {
-  res.json(persons)
+  Person
+    .find({})
+    .then(persons => {
+      res.json(persons)
+    })
 })
 
 app.get('/info', (req, res) => {
-  res.send(
-    `Phonebook has info for ${persons.length} people
-    <br />
-    <br />
-    ${new Date()}
-    `
-  )
+  Person
+    .find({})
+    .then(p => {
+      res.send(
+        `Phonebook has info for ${p.length} people
+        <br />
+        <br />
+        ${new Date()}`
+      )
+    })
 })
 
 app.get("/api/persons/:id", (req, res) => {
-  const id = parseInt(req.params.id)
-  const person = persons.find(n => n.id === id)
-  if (person) {
-    res.send(person)
-  }
-  else{
-    res.status(404).end()
-  }
+  const id = req.params.id
+  Person
+    .findById(id)
+    .then(p => {
+      p ? res.json(p) : res.status(404).end
+    })
+    .catch(err => console.log(err.message))
 })
 
 app.delete("/api/persons/:id", (req, res) => {
@@ -74,29 +59,32 @@ app.get("/", (req, res) => {
 })
 
 app.post("/api/persons", (req, res) => {
-  const randomId = Math.floor(Math.random() * 100000)
   const reqBody = req.body
-  const newPerson = {
-    id: randomId,
+  const newPerson = new Person({
     name: reqBody.name,
     number: reqBody.number
-  }
+  })
 
-  if (!reqBody.name || !reqBody.number){
+  if (!reqBody.name || !reqBody.number) {
     return res.status(400).json({
       error: "Name and/or number is missing"
     })
   }
-  
-  if (persons.some(p => p.name === reqBody.name)){
-    return res.status(400).json({
-      error: "That name already exists in phonebook"
-    })
-  } 
 
-  persons = persons.concat(newPerson)
-  res.json(reqBody)
-  console.log(reqBody)
+  Person.find({})
+    .then(p => {
+      if (p.some(per => per.name === reqBody.name)) {
+        return res.status(400).json({
+          error: "That name already exists in phonebook"
+        })
+      }
+    })
+
+  newPerson
+    .save()
+    .then(newP => {
+      res.json(newP)
+    })
 })
 
 const unknownEndpoint = (request, response) => {
@@ -105,7 +93,7 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint)
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
