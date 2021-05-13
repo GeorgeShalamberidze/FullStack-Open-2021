@@ -6,28 +6,40 @@ if (process.argv.length < 3) {
 }
 
 const password = process.argv[2]
-console.log(password)
 
 const url =
-  `mongodb+srv://ggeoart:<oldstyleshala>@cluster01.9aama.mongodb.net/PHONEBOOKDB?retryWrites=true&w=majority`
+  `mongodb://ggeoart:${password}@cluster01-shard-00-00.9aama.mongodb.net:27017,cluster01-shard-00-01.9aama.mongodb.net:27017,cluster01-shard-00-02.9aama.mongodb.net:27017/phonebookDB?ssl=true&replicaSet=atlas-wwdj6h-shard-0&authSource=admin&retryWrites=true&w=majority`
 
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 
-const noteSchema = new mongoose.Schema({
-  content: String,
-  date: Date,
-  important: Boolean,
+const personSchema = new mongoose.Schema({
+  name: String,
+  number: String,
 })
 
-const Note = mongoose.model('Note', noteSchema)
+const Person = mongoose.model('Person', personSchema)
 
-const note = new Note({
-  content: 'HTML is Easy',
-  date: new Date(),
-  important: true,
+const person = new Person({
+  name: 'Mongoose',
+  number: "5555555",
 })
 
-note.save().then(result => {
-  console.log('note saved!')
+
+person.save().then(result => {
+  console.log("added")
   mongoose.connection.close()
 })
+
+Person.find({}).then(result => {
+  result.forEach(p => {
+    console.log("foreach")
+  })
+  mongoose.connection.close()
+})
+
+process.argv.forEach((val, index) => {
+  console.log(`${index}: ${val}`);
+});
+
+
+console.log("process.arg[0]: ", process.argv[3])
