@@ -21,26 +21,3 @@ personSchema.set("toJSON", {
 })
 
 module.exports = mongoose.model('Person', personSchema)
-//////////////////////////////////////////////////////
-
-// const Person = mongoose.model('Person', personSchema)
-
-// const person = new Person({
-//   name: process.argv[3],
-//   number: process.argv[4],
-// })
-
-
-// if (process.argv[3] || process.argv[4]) {
-//   person.save().then(p => {
-//     console.log(`${p.name} ${p.number} added to phonebook list`)
-//   })
-// }
-// else {
-//   Person.find({}).then(persons => {
-//     persons.forEach(person => {
-//       console.log(person.name, person.number)
-//       mongoose.connection.close()
-//     })
-//   })
-// }
