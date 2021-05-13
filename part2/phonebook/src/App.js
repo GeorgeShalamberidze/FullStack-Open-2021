@@ -57,12 +57,12 @@ const App = () => {
       alert(`${newNumber} Already Exists`)
     }
     else if (!newNumber == "" && !newName == "") {
-      const noteObj = {
+      const personObj = {
         name: newName,
         number: newNumber
       }
       service
-        .create(noteObj)
+        .create(personObj)
         .then(res => {
           setPersons(persons.concat(res))
           setNewName('')
@@ -73,7 +73,10 @@ const App = () => {
           }, 4000)
         })
         .catch(err => {
-          console.log(err)
+          setHandleError(err.response.data.error)
+          setTimeout(() => {
+            setHandleError(null)
+          }, 4000)
         })
     }
   }

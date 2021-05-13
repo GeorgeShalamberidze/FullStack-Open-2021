@@ -62,7 +62,7 @@ app.delete("/api/persons/:id", (req, res, next) => {
 })
 
 // POST add new person to the list
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
   const reqBody = req.body
   const newPerson = new Person({
     name: reqBody.name,
@@ -87,9 +87,9 @@ app.post("/api/persons", (req, res) => {
 
   newPerson
     .save()
-    .then(newP => {
-      res.json(newP)
-    })
+    .then(savedP => savedP.toJSON())
+    .then(savedAndFormattedP => res.json(savedAndFormattedP))
+    .catch(err => next(err))
 })
 
 // PUT update existing information on a person
@@ -103,7 +103,7 @@ app.put("/api/persons/:id", (req, res, next) => {
   }
 
   Person
-    .findByIdAndUpdate(id, newPerson, { new: true })
+    .findByIdAndUpdate(id, newPerson, { new: true } )
     .then(updatedP => {
       res.json(updatedP)
     })
@@ -123,13 +123,15 @@ app.listen(PORT, () => {
 })
 
 // ERROR HANDLING middleware
-const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
+const errorHandler = (err, req, res, next) => {
+  console.error(err.message)
 
-  if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' })
+  if (err.name === 'CastError') {
+    return res.status(400).send({ error: 'malformatted id' })
   } 
-
-  next(error)
+  else if (err.name === "ValidationError") {
+    return res.status(400).json({ error: err.message })
+  }
+  next(err)
 }
 app.use(errorHandler)
