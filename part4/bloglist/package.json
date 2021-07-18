@@ -4,9 +4,9 @@
   "description": "backend",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "test": "jest --verbose"
   },
   "author": "George Shalamberidze",
   "license": "MIT",
@@ -17,6 +17,7 @@
     "mongoose": "^5.12.12"
   },
   "devDependencies": {
+    "jest": "^27.0.4",
     "nodemon": "^2.0.7"
   }
 }
