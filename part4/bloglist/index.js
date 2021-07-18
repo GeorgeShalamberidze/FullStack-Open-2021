@@ -34,7 +34,7 @@ app.get("/api/blogs", (request, response) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("dddd");
+  res.send("asd");
 });
 
 app.post("/api/blogs", (request, response) => {
