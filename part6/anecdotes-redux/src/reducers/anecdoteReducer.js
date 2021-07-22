@@ -1,58 +1,52 @@
-const anecdotesAtStart = [
-  "If it hurts, do it more often",
-  "Adding manpower to a late software project makes it later!",
-  "The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.",
-  "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
-  "Premature optimization is the root of all evil.",
-  "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
-];
+import services from "../services/anecdotes";
 
-export const getId = () => (100000 * Math.random()).toFixed(0);
-
-const asObject = (anecdote) => {
-  return {
-    content: anecdote,
-    id: getId(),
-    votes: 0,
-  };
-};
-
-export const voteCounter = (id) => {
-  return {
-    type: "VOTE",
-    data: { id },
+export const voteCounter = (anecdote) => {
+  return async (dispatch) => {
+    const objToChange = {
+      ...anecdote,
+      votes: anecdote.votes + 1,
+    };
+    const idToVoteFor = await services.vote(anecdote.id, objToChange);
+    dispatch({
+      type: "VOTE",
+      data: idToVoteFor,
+    });
   };
 };
 
 export const newNote = (content) => {
-  return {
-    type: "ADD_NOTE",
-    data: {
-      content,
-      id: getId(),
-      votes: 0,
-    },
+  return async (dispatch) => {
+    const newAnecdote = await services.createAnecdote(content);
+    dispatch({
+      type: "ADD_NOTE",
+      data: newAnecdote,
+    });
   };
 };
 
-const initialState = anecdotesAtStart.map(asObject);
+export const initializeAnecdotes = () => {
+  return async (dispatch) => {
+    const anecdotes = await services.getAll();
+    dispatch({
+      type: "INIT_ANECDOTES",
+      data: anecdotes,
+    });
+  };
+};
 
-const anecdoteReducer = (state = initialState, action) => {
+const anecdoteReducer = (state = [], action) => {
+  console.log(action.data);
   switch (action.type) {
     case "VOTE":
       const id = action.data.id;
-      const voteToChange = state.find((f) => f.id === id);
-      const voteChangedNote = {
-        ...voteToChange,
-        votes: voteToChange.votes + 1,
-      };
       return state.map((anecdote) =>
-        anecdote.id === id ? voteChangedNote : anecdote
+        anecdote.id === id ? action.data : anecdote
       );
 
     case "ADD_NOTE":
-      const newNote = action.data;
-      return [...state, newNote];
+      return [...state, action.data];
+    case "INIT_ANECDOTES":
+      return action.data;
     default:
       return state;
   }

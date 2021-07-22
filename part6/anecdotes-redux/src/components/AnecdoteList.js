@@ -10,18 +10,12 @@ const AnecdoteList = () => {
   const dispatch = useDispatch();
 
   const vote = (anecdote) => {
-    dispatch(voteCounter(anecdote.id));
-    dispatch(showNotification(`you have voted for: ${anecdote.content}`));
-    setTimeout(() => {
-      dispatch({
-        type: "NOTIFICATION",
-        data: null,
-      });
-    }, 2000);
+    dispatch(voteCounter(anecdote));
+    dispatch(showNotification(`you have voted for: ${anecdote.content}`, 2));
   };
 
   const orderedNumber = anecdotes
-    .filter((a) => a.content.toLowerCase().includes(filter))
+    ?.filter((a) => a.content.toLowerCase().includes(filter))
     .sort((a, b) => (a.votes > b.votes ? -1 : 1));
   return (
     <div>

@@ -6,18 +6,12 @@ import { showNotification } from "../reducers/notificationReducer";
 const AnecdoteForm = () => {
   const dispatch = useDispatch();
 
-  const addNote = (e) => {
+  const addNote = async (e) => {
     e.preventDefault();
     const content = e.target.anecdote.value;
     e.target.anecdote.value = "";
     dispatch(newNote(content));
-    dispatch(showNotification(`New Note Added: ${content}`));
-    setTimeout(() => {
-      dispatch({
-        type: "NOTIFICATION",
-        data: null,
-      });
-    }, 2000);
+    dispatch(showNotification(`New Note Added: ${content}`), 2);
   };
 
   return (
