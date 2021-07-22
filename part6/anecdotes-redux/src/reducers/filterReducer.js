@@ -8,4 +8,11 @@ const filterReducer = (state = "", action) => {
   }
 };
 
+export const filterFromReducer = (content) => {
+  return {
+    type: "FILTER",
+    data: content,
+  };
+};
+
 export default filterReducer;
