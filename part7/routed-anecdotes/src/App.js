@@ -4,10 +4,11 @@ import {
   Switch,
   Route,
   Link,
-  useRouteMatch,
   useParams,
   useHistory,
 } from "react-router-dom";
+
+import useField from "./hooks";
 
 const Menu = () => {
   const padding = {
@@ -80,17 +81,31 @@ const Footer = () => (
 );
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState("");
-  const [author, setAuthor] = useState("");
-  const [info, setInfo] = useState("");
   const history = useHistory();
+
+  //Form Stuff Here
+  const fieldContent = useField("content");
+  const fieldAuthor = useField("author");
+  const fieldInfo = useField("info");
+
+  const { reset: contentReset, ...restContent } = fieldContent;
+  const { reset: authorReset, ...restAuthor } = fieldAuthor;
+  const { reset: infoReset, ...restInfo } = fieldInfo;
+
+  console.log(contentReset);
+
+  const resetFunc = () => {
+    contentReset();
+    authorReset();
+    infoReset();
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     props.addNew({
-      content,
-      author,
-      info,
+      content: fieldContent.value,
+      author: fieldAuthor.value,
+      info: fieldInfo.value,
       votes: 0,
     });
     history.push("/");
@@ -102,29 +117,20 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input
-            name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
+          <input {...restContent} />
         </div>
         <div>
           author
-          <input
-            name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
+          <input {...restAuthor} />
         </div>
         <div>
           url for more info
-          <input
-            name="info"
-            value={info}
-            onChange={(e) => setInfo(e.target.value)}
-          />
+          <input {...restInfo} />
         </div>
         <button>create</button>
+        <button type="button" onClick={resetFunc}>
+          reset
+        </button>
       </form>
     </div>
   );
@@ -133,7 +139,6 @@ const CreateNew = (props) => {
 const SingleAnecdote = ({ anecdotes }) => {
   const id = useParams().id;
   const { content, author, info, votes } = anecdotes.find((a) => a.id === id);
-  console.log(anecdotes);
 
   return (
     <div>
@@ -180,18 +185,18 @@ const App = () => {
     }, 10000);
   };
 
-  const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
+  // const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
 
-  const vote = (id) => {
-    const anecdote = anecdoteById(id);
+  // const vote = (id) => {
+  //   const anecdote = anecdoteById(id);
 
-    const voted = {
-      ...anecdote,
-      votes: anecdote.votes + 1,
-    };
+  //   const voted = {
+  //     ...anecdote,
+  //     votes: anecdote.votes + 1,
+  //   };
 
-    setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
-  };
+  //   setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
+  // };
 
   return (
     <div>
